@@ -1,0 +1,25 @@
+{{define "content"}}
+  <div class="card">
+    <div class="muted">Latest posts</div>
+  </div>
+
+  {{if .Posts}}
+    {{range .Posts}}
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; gap:12px; align-items:baseline;">
+          <div><a href="/post/{{.Slug}}"><strong>{{.Title}}</strong></a></div>
+          {{if .PublishedAt}}<div class="muted" style="font-size:12px;">{{.PublishedAt.Format "2006-01-02"}}</div>{{end}}
+        </div>
+        {{if .Tags}}
+          <div style="margin-top:10px;">
+            {{range .Tags}}
+              <a class="tag" href="/tag/{{.Slug}}">{{.Name}}</a>
+            {{end}}
+          </div>
+        {{end}}
+      </div>
+    {{end}}
+  {{else}}
+    <div class="card muted">No posts yet.</div>
+  {{end}}
+{{end}}

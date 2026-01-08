@@ -1,0 +1,31 @@
+{{define "content"}}
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1 style="margin:0;">Admin</h1>
+      <div>
+        <a href="/admin/posts/new" class="tag">New post</a>
+        <a href="/admin/settings" class="tag">Settings</a>
+        <form method="post" action="/admin/logout" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+          <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {{if .Posts}}
+    {{range .Posts}}
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; gap:12px;">
+          <div>
+            <a href="/admin/posts/edit/{{.Slug}}"><strong>{{.Title}}</strong></a>
+            {{if not .IsPublished}}<span class="tag danger">draft</span>{{end}}
+          </div>
+          <div class="muted" style="font-size:12px;">#{{.ID}}</div>
+        </div>
+      </div>
+    {{end}}
+  {{else}}
+    <div class="card muted">No posts yet.</div>
+  {{end}}
+{{end}}

@@ -1,0 +1,16 @@
+{{define "content"}}
+  <div class="card">
+    <h1 style="margin:0;">Tag: {{.TagSlug}}</h1>
+    <div class="muted">Posts with this tag</div>
+  </div>
+
+  {{if .Posts}}
+    {{range .Posts}}
+      <div class="card">
+        <a href="/post/{{.Slug}}"><strong>{{.Title}}</strong></a>
+      </div>
+    {{end}}
+  {{else}}
+    <div class="card muted">No posts found for this tag.</div>
+  {{end}}
+{{end}}

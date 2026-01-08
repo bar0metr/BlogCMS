@@ -1,0 +1,21 @@
+{{define "content"}}
+  <div class="card">
+    <h1 style="margin-top:0;">Admin login</h1>
+    {{if .Error}}<div class="danger" style="margin-bottom:12px;">{{.Error}}</div>{{end}}
+    <form method="post" action="/admin/login">
+      <div class="row">
+        <div>
+          <label class="muted">Username</label>
+          <input name="username" autocomplete="username" required/>
+        </div>
+        <div>
+          <label class="muted">Password</label>
+          <input name="password" type="password" autocomplete="current-password" required/>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+{{end}}

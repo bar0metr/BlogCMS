@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: blogcms
+      POSTGRES_USER: blogcms
+      POSTGRES_PASSWORD: blogcms
+    ports:
+      - "5432:5432"
+    volumes:
+      - blogcms_pg:/var/lib/postgresql/data
+volumes:
+  blogcms_pg:

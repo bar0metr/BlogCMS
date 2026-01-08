@@ -1,0 +1,38 @@
+{{define "content"}}
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1 style="margin:0;">Settings</h1>
+      <div>
+        <a href="/admin" class="tag">Back</a>
+        <form method="post" action="/admin/logout" style="display:inline;">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+        <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  {{if .Error}}<div class="card danger">{{.Error}}</div>{{end}}
+  {{if .Message}}<div class="card ok">{{.Message}}</div>{{end}}
+
+  <div class="card">
+    <form method="post" action="/admin/settings">
+      <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+      <label class="muted">Blog title</label>
+      <input name="blog_title" value="{{.BlogTitle}}" required/>
+
+	  <div style="margin-top:12px;">
+		<label class="muted">About</label>
+		<textarea name="blog_about" rows="4" required>{{.BlogAbout}}</textarea>
+	  </div>
+
+	  <div style="margin-top:12px;">
+		<label class="muted">Footer (optional)</label>
+		<textarea name="blog_footer" rows="2" placeholder="...">{{.BlogFooter}}</textarea>
+	  </div>
+      <div style="margin-top:12px;">
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+{{end}}

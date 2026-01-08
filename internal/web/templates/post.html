@@ -1,0 +1,17 @@
+{{define "content"}}
+  <div class="card">
+    <div class="muted" style="font-size:12px;">/{{.Post.Slug}}</div>
+    <h1 style="margin: 10px 0 0 0;">{{.Post.Title}}</h1>
+    {{if .Post.Tags}}
+      <div style="margin-top:10px;">
+        {{range .Post.Tags}}
+          <a class="tag" href="/tag/{{.Slug}}">{{.Name}}</a>
+        {{end}}
+      </div>
+    {{end}}
+  </div>
+
+  <div class="card">
+    <article>{{safeHTML .Post.ContentHTML}}</article>
+  </div>
+{{end}}

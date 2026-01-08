@@ -1,0 +1,28 @@
+server:
+  addr: ":8443"
+  read_header_timeout: 5s
+  read_timeout: 15s
+  write_timeout: 30s
+  idle_timeout: 2m
+  shutdown_timeout: 10s
+  max_header_bytes: 1048576
+  request_timeout: 10s
+db:
+  dsn: "postgres://blogcms:blogcms@localhost:5432/blogcms?sslmode=disable"
+  max_open_conns: 50
+  max_idle_conns: 25
+  conn_max_lifetime: 30m
+  conn_max_idle_time: 5m
+  ping_timeout: 5s
+security:
+  session_key: "CHANGE_ME__LONG_RANDOM"
+  cookie_secure: false
+storage:
+  upload_dir: "./data/uploads"
+  public_base_url: "/uploads/"
+  max_upload_mb: 10
+
+app:
+  markdown_renderer_pool: 4
+  settings_cache_ttl: 30s
+  tagcloud_cache_ttl: 30s

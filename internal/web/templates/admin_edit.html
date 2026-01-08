@@ -1,0 +1,124 @@
+{{define "content"}}
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1 style="margin:0;">{{if .Post.ID}}Edit post{{else}}New post{{end}}</h1>
+        {{if .Post.ID}}<div class="muted">ID: {{.Post.ID}} · Slug: {{.Post.Slug}}</div>{{end}}
+      </div>
+      <div>
+        <a href="/admin" class="tag">Back</a>
+        <form method="post" action="/admin/logout" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+          <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {{if .Error}}<div class="card danger">{{.Error}}</div>{{end}}
+
+  <div class="card">
+    <form method="post" action="{{if .Post.ID}}/admin/posts/update{{else}}/admin/posts/create{{end}}">
+      {{if .Post.ID}}<input type="hidden" name="id" value="{{.Post.ID}}"/>{{end}}
+      <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+
+      <label class="muted">Title</label>
+      <input name="title" value="{{.Post.Title}}" required/>
+
+      <div style="margin-top:12px;">
+        <label class="muted">Tags (comma-separated)</label>
+        <input name="tags" value="{{.Tags}}"/>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label class="muted">Content (Markdown)</label>
+        <textarea id="content_md" name="content_md" rows="16">{{.Post.ContentMD}}</textarea>
+        <div class="muted" style="margin-top:8px; font-size:12px;">
+          Tip: use the toolbar to upload images/files and insert links.
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label>
+          <input type="checkbox" name="is_published" {{if .Post.IsPublished}}checked{{end}}/>
+          Publish
+        </label>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button type="submit">{{if .Post.ID}}Save{{else}}Create{{end}}</button>
+      </div>
+    </form>
+  </div>
+
+  {{if .Post.ID}}
+    <div class="card">
+      <div class="muted">Preview</div>
+      <article style="margin-top:10px;">{{safeHTML .Post.ContentHTML}}</article>
+    </div>
+  {{end}}
+
+  <!-- Markdown editor (EasyMDE) via CDN; keeps server-side deps minimal. -->
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <script>
+    (function(){
+      var ta = document.getElementById('content_md');
+      if (!ta || typeof EasyMDE === 'undefined') return;
+
+      function getCSRF(){
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? (meta.content || '').trim() : '';
+      }
+      var csrf = getCSRF();
+
+      var mde = new EasyMDE({
+        element: ta,
+        spellChecker: false,
+        status: false,
+        toolbar: [
+          'bold', 'italic', 'strikethrough', '|',
+          'heading', 'quote', 'unordered-list', 'ordered-list', '|',
+          {
+            name: 'upload',
+            action: function(editor){
+              var input = document.createElement('input');
+              input.type = 'file';
+              input.onchange = async function(){
+                if (!input.files || !input.files[0]) return;
+                var fd = new FormData();
+                fd.append('file', input.files[0]);
+                // CSRF for multipart uploads: send both header and form field.
+                fd.append('csrf_token', csrf);
+                try {
+                  var res = await fetch('/admin/upload', {
+                    method: 'POST',
+                    headers: {'X-CSRF-Token': csrf},
+                    body: fd,
+                    credentials: 'same-origin'
+                  });
+                  if (!res.ok) {
+                    alert('Upload failed: ' + res.status);
+                    return;
+                  }
+                  var data = await res.json();
+                  var url = data.url;
+                  var isImage = (data.content_type || '').indexOf('image/') === 0;
+                  var md = isImage ? ('![](' + url + ')') : ('[' + (data.original||'file') + '](' + url + ')');
+                  editor.codemirror.replaceSelection(md);
+                } catch (e) {
+                  alert('Upload failed');
+                }
+              };
+              input.click();
+            },
+            className: 'fa fa-upload',
+            title: 'Upload image/file'
+          },
+          'link', 'image', '|',
+          'preview', 'side-by-side', 'fullscreen'
+        ]
+      });
+    })();
+  </script>
+{{end}}

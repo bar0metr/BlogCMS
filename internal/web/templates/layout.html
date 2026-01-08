@@ -1,0 +1,82 @@
+{{define "layout"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="csrf-token" content="{{.CSRFToken}}"/>
+  <title>{{.PageTitle .TitleSuffix}}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #0b0f14; color: #e6edf3; }
+    a { color: #7dd3fc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { padding: 16px 20px; border-bottom: 1px solid #1f2937; display:flex; justify-content:space-between; align-items:center; }
+    .wrap { display:flex; gap: 20px; padding: 20px; max-width: 1100px; margin: 0 auto; }
+    main { flex: 1; min-width: 0; }
+    aside { width: 260px; border-left: 1px solid #1f2937; padding-left: 16px; }
+    .card { background: #0f1620; border: 1px solid #1f2937; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .muted { color: #9aa4b2; }
+    .tag { display:inline-block; padding: 4px 8px; border: 1px solid #1f2937; border-radius: 999px; margin: 4px 6px 0 0; font-size: 12px; }
+    textarea, input { width: 100%; background: #0b0f14; color:#e6edf3; border: 1px solid #1f2937; border-radius: 10px; padding: 10px; }
+    button { background: #111827; color:#e6edf3; border: 1px solid #374151; border-radius: 10px; padding: 10px 12px; cursor:pointer; }
+    button:hover { background:#0f172a; }
+    .row { display:flex; gap: 12px; }
+    .row > div { flex: 1; }
+    .danger { color: #fca5a5; }
+    .ok { color: #86efac; }
+    pre, code { background:#0b0f14; border:1px solid #1f2937; border-radius: 8px; padding: 2px 6px; }
+    article h1, article h2, article h3 { margin-top: 1.2em; }
+    article img { max-width: 100%; height: auto; display: block; }
+    article pre { overflow: auto; }
+    article table { display: block; max-width: 100%; overflow: auto; }
+
+    /* EasyMDE / CodeMirror dark theme tweaks */
+    .editor-toolbar { background:#0f1620; border:1px solid #1f2937; border-radius: 10px; }
+    .editor-toolbar a { color:#9aa4b2 !important; }
+    .editor-toolbar a:hover { color:#e6edf3 !important; background:#111827; border-radius: 8px; }
+    .editor-toolbar a.active { color:#e6edf3 !important; }
+    .CodeMirror { background:#0b0f14; color:#e6edf3; border:1px solid #1f2937; border-radius: 10px; }
+    .CodeMirror-cursor { border-left: 1px solid #e6edf3; }
+    .CodeMirror-gutters { background:#0b0f14; border-right:1px solid #1f2937; }
+    .editor-preview, .editor-preview-side { background:#0b0f14; color:#e6edf3; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><a href="/"><strong>{{.BlogTitle}}</strong></a></div>
+    <nav class="muted">
+      {{if .IsAuthed}}<a href="/admin">Admin</a>{{end}}
+    </nav>
+  </header>
+
+  <div class="wrap">
+    <main>
+      {{template "content" .}}
+    </main>
+    <aside>
+      <div class="card">
+        <div class="muted" style="margin-bottom:8px;">Tag cloud</div>
+        {{if .TagCloud}}
+          {{range .TagCloud}}
+            <a class="tag" href="/tag/{{.Slug}}">{{.Name}} ({{.Used}})</a>
+          {{end}}
+        {{else}}
+          <div class="muted">No tags yet.</div>
+        {{end}}
+      </div>
+      <div class="card">
+        <div class="muted" style="margin-bottom:8px;">About</div>
+        <div class="muted">{{.BlogAbout}}</div>
+      </div>
+    </aside>
+  </div>
+
+  {{if .BlogFooter}}
+    <footer style="max-width:1100px; margin: 0 auto; padding: 0 20px 24px 20px;" class="muted">
+      {{.BlogFooter}}
+    </footer>
+  {{end}}
+</body>
+</html>
+{{end}}
