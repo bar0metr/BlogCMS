@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,13 +19,6 @@ import (
 )
 
 func main() {
-	showVersion := flag.Bool("v", false, "show version and exit")
-	flag.Parse()
-	if *showVersion {
-		fmt.Printf("BlogCMS version: %s\n", version.Version)
-		os.Exit(0)
-	}
-
 	fmt.Printf("BlogCMS version: %s\n", version.Version)
 	cfg, err := config.Load()
 	if err != nil {
