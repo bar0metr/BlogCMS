@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"strings"
 	"sync"
@@ -12,6 +13,7 @@ import (
 	"blogcms/internal/app"
 	"blogcms/internal/auth"
 	"blogcms/internal/domain"
+	webstatic "blogcms/internal/web/static"
 )
 
 type Services struct {
@@ -153,6 +155,11 @@ func (s *Server) Shutdown(ctx context.Context) error {
 }
 
 func (s *Server) registerRoutes(mux *http.ServeMux) {
+	// Embedded static assets (CSS, etc.)
+	if sub, err := fs.Sub(webstatic.FS, "."); err == nil {
+		mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(sub))))
+	}
+
 	// Public
 	mux.HandleFunc("/", s.handleHome)
 	mux.HandleFunc("/post/", s.handlePost)

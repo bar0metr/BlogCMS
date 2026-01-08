@@ -1,11 +1,18 @@
 package version
 
 var (
-	Version = "1.0.2"
+	Version = "1.0.3"
 )
 
 /*
 Changelog:
+
+=========================
+1.0.3 - Styling cleanup
+=========================
+
+- Changed: moved all template-embedded and inline styles into an external /static/site.css served from embedded assets.
+- Improved: adjusted home page post preview fade so the first line remains fully readable, with a gentle fade only on subsequent lines.
 
 =========================
 1.0.2 - Tags, slugs, and UX fixes

@@ -6,13 +6,13 @@
   {{if .Posts}}
     {{range .Posts}}
       <div class="card">
-        <div style="display:flex; justify-content:space-between; gap:12px; align-items:baseline;">
+        <div class="flex-between-baseline">
           <div><a href="/post/{{.Slug}}"><strong>{{.Title}}</strong></a></div>
-          {{if .PublishedAt}}<div class="muted" style="font-size:12px;">{{.PublishedAt.Format "2006-01-02"}}</div>{{end}}
+          {{if .PublishedAt}}<div class="muted fs-12">{{.PublishedAt.Format "2006-01-02"}}</div>{{end}}
         </div>
         {{if .Excerpt}}<div class="post-excerpt muted">{{.Excerpt}}</div>{{end}}
         {{if .Tags}}
-          <div style="margin-top:10px;">
+          <div class="mt-10">
             {{range .Tags}}
               <a class="tag" href="/tag/{{.Slug}}">{{.Name}}</a>
             {{end}}

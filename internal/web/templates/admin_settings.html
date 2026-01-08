@@ -1,13 +1,13 @@
 {{define "content"}}
   <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h1 style="margin:0;">Settings</h1>
+    <div class="flex-between">
+      <h1 class="m-0">Settings</h1>
       <div>
         <a href="/admin" class="tag">Back</a>
-        <form method="post" action="/admin/logout" style="display:inline;">
-        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
-        <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
-      </form>
+        <form method="post" action="/admin/logout" class="inline">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+          <button type="submit" class="btn-tag">Logout</button>
+        </form>
       </div>
     </div>
   </div>
@@ -21,16 +21,17 @@
       <label class="muted">Blog title</label>
       <input name="blog_title" value="{{.BlogTitle}}" required/>
 
-	  <div style="margin-top:12px;">
-		<label class="muted">About</label>
-		<textarea name="blog_about" rows="4" required>{{.BlogAbout}}</textarea>
-	  </div>
 
-	  <div style="margin-top:12px;">
-		<label class="muted">Footer (optional)</label>
-		<textarea name="blog_footer" rows="2" placeholder="...">{{.BlogFooter}}</textarea>
-	  </div>
-      <div style="margin-top:12px;">
+      <div class="mt-12">
+        <label class="muted">About</label>
+        <textarea name="blog_about" rows="4" required>{{.BlogAbout}}</textarea>
+      </div>
+
+      <div class="mt-12">
+        <label class="muted">Footer (optional)</label>
+        <textarea name="blog_footer" rows="2" placeholder="...">{{.BlogFooter}}</textarea>
+      </div>
+      <div class="mt-12">
         <button type="submit">Save</button>
       </div>
     </form>

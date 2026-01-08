@@ -1,15 +1,15 @@
 {{define "content"}}
   <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div class="flex-between">
       <div>
-        <h1 style="margin:0;">{{if .Post.ID}}Edit post{{else}}New post{{end}}</h1>
+        <h1 class="m-0">{{if .Post.ID}}Edit post{{else}}New post{{end}}</h1>
         {{if .Post.ID}}<div class="muted">ID: {{.Post.ID}} · Slug: {{.Post.Slug}}</div>{{end}}
       </div>
       <div>
         <a href="/admin" class="tag">Back</a>
-        <form method="post" action="/admin/logout" style="display:inline;">
+        <form method="post" action="/admin/logout" class="inline">
           <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
-          <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
+          <button type="submit" class="btn-tag">Logout</button>
         </form>
       </div>
     </div>
@@ -25,30 +25,30 @@
       <label class="muted">Title</label>
       <input name="title" value="{{.Post.Title}}" required/>
 
-      <div style="margin-top:12px; position:relative;">
+      <div class="mt-12 relative">
         <label class="muted">Tags</label>
         <input type="hidden" id="tags_csv" name="tags" value="{{.Tags}}"/>
         <div id="tags_editor" class="tags-editor" aria-label="Tags"></div>
-        <div id="tags_suggest" class="tags-suggest" style="display:none;"></div>
-        <div class="muted" style="margin-top:6px; font-size:12px;">Type a tag and press comma/Enter. Suggestions appear as you type.</div>
+        <div id="tags_suggest" class="tags-suggest hidden"></div>
+        <div class="muted mt-6 fs-12">Type a tag and press comma/Enter. Suggestions appear as you type.</div>
       </div>
 
-      <div style="margin-top:12px;">
+      <div class="mt-12">
         <label class="muted">Content (Markdown)</label>
         <textarea id="content_md" name="content_md" rows="16">{{.Post.ContentMD}}</textarea>
-        <div class="muted" style="margin-top:8px; font-size:12px;">
+        <div class="muted mt-8 fs-12">
           Tip: use the toolbar to upload images/files and insert links.
         </div>
       </div>
 
-      <div style="margin-top:12px;">
+      <div class="mt-12">
         <label>
           <input type="checkbox" name="is_published" {{if .Post.IsPublished}}checked{{end}}/>
           Publish
         </label>
       </div>
 
-      <div style="margin-top:12px;">
+      <div class="mt-12">
         <button type="submit">{{if .Post.ID}}Save{{else}}Create{{end}}</button>
       </div>
     </form>
@@ -57,7 +57,7 @@
   {{if .Post.ID}}
     <div class="card">
       <div class="muted">Preview</div>
-      <article style="margin-top:10px;">{{safeHTML .Post.ContentHTML}}</article>
+      <article class="mt-10">{{safeHTML .Post.ContentHTML}}</article>
     </div>
   {{end}}
 

@@ -1,13 +1,13 @@
 {{define "content"}}
   <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h1 style="margin:0;">Admin</h1>
+    <div class="flex-between">
+      <h1 class="m-0">Admin</h1>
       <div>
         <a href="/admin/posts/new" class="tag">New post</a>
         <a href="/admin/settings" class="tag">Settings</a>
-        <form method="post" action="/admin/logout" style="display:inline;">
+        <form method="post" action="/admin/logout" class="inline">
           <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
-          <button type="submit" class="tag" style="border:none; cursor:pointer;">Logout</button>
+          <button type="submit" class="btn-tag">Logout</button>
         </form>
       </div>
     </div>
@@ -16,12 +16,12 @@
   {{if .Posts}}
     {{range .Posts}}
       <div class="card">
-        <div style="display:flex; justify-content:space-between; gap:12px;">
+        <div class="flex-between-gap12">
           <div>
             <a href="/admin/posts/edit/{{.Slug}}"><strong>{{.Title}}</strong></a>
             {{if not .IsPublished}}<span class="tag danger">draft</span>{{end}}
           </div>
-          <div class="muted" style="font-size:12px;">#{{.ID}}</div>
+          <div class="muted fs-12">#{{.ID}}</div>
         </div>
       </div>
     {{end}}

@@ -1,9 +1,9 @@
 {{define "content"}}
   <div class="card">
-    <div class="muted" style="font-size:12px;">/{{.Post.Slug}}</div>
-    <h1 style="margin: 10px 0 0 0;">{{.Post.Title}}</h1>
+    <div class="muted fs-12">/{{.Post.Slug}}</div>
+    <h1 class="mt-10 m-0">{{.Post.Title}}</h1>
     {{if .Post.Tags}}
-      <div style="margin-top:10px;">
+      <div class="mt-10">
         {{range .Post.Tags}}
           <a class="tag" href="/tag/{{.Slug}}">{{.Name}}</a>
         {{end}}
