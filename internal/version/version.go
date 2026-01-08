@@ -1,11 +1,20 @@
 package version
 
 var (
-	Version = "1.0.4"
+	Version = "1.0.5"
 )
 
 /*
 Changelog:
+
+
+============================
+1.0.5 - Mobile layout fixes
+============================
+
+- Fixed: responsive layout on small screens (wrap stacks main and sidebar, sidebar loses fixed width and divider).
+- Fixed: corrected accidental CSS selectors for main/aside so flex sizing works as intended.
+- Improved: post card header row now wraps cleanly on narrow widths.
 
 ============================
 1.0.4 - Home pagination

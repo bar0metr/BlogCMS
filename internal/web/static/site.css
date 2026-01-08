@@ -143,6 +143,7 @@ article table { display: block; max-width: 100%; overflow: auto; }
   justify-content: space-between;
   gap: 12px;
   align-items: baseline;
+  flex-wrap: wrap;
 }
 
 .inline { display: inline; }
@@ -242,6 +243,45 @@ article table { display: block; max-width: 100%; overflow: auto; }
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px 24px 20px;
+}
+
+/* Responsive: phones/tablets */
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .wrap {
+    flex-direction: column;
+  }
+
+  aside {
+    width: auto;
+    border-left: none;
+    padding-left: 0;
+  }
+
+  /* These are used in multiple templates; on narrow screens they should stack */
+  .flex-between,
+  .flex-between-gap12,
+  .flex-between-baseline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  header { padding: 14px 14px; }
+  .wrap { padding: 12px; gap: 12px; }
+  .card { padding: 14px; border-radius: 14px; }
+  .tag { padding: 5px 10px; font-size: 12px; }
+  .post-excerpt { font-size: 14px; }
 }
 
 /* EasyMDE / CodeMirror dark theme tweaks */
