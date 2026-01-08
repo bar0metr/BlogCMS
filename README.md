@@ -2,6 +2,8 @@
 
 A minimal personal blog CMS written in Go (Go + PostgreSQL + HTML templates), with an admin UI, tag cloud, Markdown editor, CSRF protection, and uploads.
 
+> Also, my personal blog runs on it: https://grub-loader.ru
+> 
 ## Features
 
 - Posts (Markdown) with tags
