@@ -31,6 +31,11 @@
         <label class="muted">Footer (optional)</label>
         <textarea name="blog_footer" rows="2" placeholder="...">{{.BlogFooter}}</textarea>
       </div>
+
+      <div class="mt-12">
+        <label class="muted">Home: posts per page</label>
+        <input name="home_posts_per_page" type="number" min="1" max="200" value="{{.HomePostsPerPage}}" required/>
+      </div>
       <div class="mt-12">
         <button type="submit">Save</button>
       </div>

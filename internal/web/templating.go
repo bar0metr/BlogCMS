@@ -20,6 +20,8 @@ type TemplateRenderer struct {
 func NewTemplateRenderer() (*TemplateRenderer, error) {
 	funcs := template.FuncMap{
 		"safeHTML": func(s string) template.HTML { return template.HTML(s) },
+		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
 	}
 
 	layoutBytes, err := templates.FS.ReadFile("layout.html")

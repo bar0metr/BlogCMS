@@ -2,6 +2,7 @@ package web
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"blogcms/internal/domain"
@@ -19,11 +20,32 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 	}
 	common.TitleSuffix = "Home"
 
-	posts, err := s.services.Posts.List(r.Context(), domain.PostListOptions{Limit: 20})
+	page := 1
+	if pv := strings.TrimSpace(r.URL.Query().Get("page")); pv != "" {
+		if n, err := strconv.Atoi(pv); err == nil && n > 0 {
+			page = n
+		}
+	}
+
+	perPage := common.HomePostsPerPage
+	if perPage <= 0 {
+		perPage = 20
+	}
+	// Fetch one extra row to determine whether there is a next page.
+	limit := perPage + 1
+	offset := (page - 1) * perPage
+	posts, err := s.services.Posts.List(r.Context(), domain.PostListOptions{Limit: limit, Offset: offset})
 	if err != nil {
 		writeDomainError(w, err)
 		return
 	}
+
+	hasNext := false
+	if len(posts) > perPage {
+		hasNext = true
+		posts = posts[:perPage]
+	}
+	hasPrev := page > 1
 
 	type homePost struct {
 		domain.Post
@@ -37,9 +59,15 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		ViewCommon
 		Posts []homePost
+		Page int
+		HasPrev bool
+		HasNext bool
 	}{
 		ViewCommon: common,
 		Posts:      viewPosts,
+		Page: page,
+		HasPrev: hasPrev,
+		HasNext: hasNext,
 	}
 
 	if err := s.renderer.Render(w, "home.html", data); err != nil {

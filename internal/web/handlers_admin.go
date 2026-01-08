@@ -300,6 +300,20 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("blog_title")
 		about := r.FormValue("blog_about")
 		footer := r.FormValue("blog_footer")
+		ppStr := strings.TrimSpace(r.FormValue("home_posts_per_page"))
+		pp := common.HomePostsPerPage
+		if pp <= 0 {
+			pp = app.DefaultHomePostsPerPage
+		}
+		if ppStr != "" {
+			if n, err := strconv.Atoi(ppStr); err == nil {
+				pp = n
+			} else {
+				data := pageData{ViewCommon: common, Error: "posts per page must be a number"}
+				_ = s.renderer.Render(w, "admin_settings.html", data)
+				return
+			}
+		}
 		if err := s.services.Settings.SetBlogTitle(r.Context(), title); err != nil {
 			data := pageData{ViewCommon: common, Error: err.Error()}
 			_ = s.renderer.Render(w, "admin_settings.html", data)
@@ -315,11 +329,17 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 			_ = s.renderer.Render(w, "admin_settings.html", data)
 			return
 		}
+		if err := s.services.Settings.SetHomePostsPerPage(r.Context(), pp); err != nil {
+			data := pageData{ViewCommon: common, Error: err.Error()}
+			_ = s.renderer.Render(w, "admin_settings.html", data)
+			return
+		}
 
 		// Invalidate caches so public pages reflect changes quickly.
 		s.cacheTitle.Invalidate()
 		s.cacheAbout.Invalidate()
 		s.cacheFooter.Invalidate()
+		s.cacheHomePostsPerPage.Invalidate()
 
 		// Refresh common view data so the form reflects saved values.
 		common, _ = s.commonViewData(r.Context())

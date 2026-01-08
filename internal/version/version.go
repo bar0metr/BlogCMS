@@ -1,11 +1,19 @@
 package version
 
 var (
-	Version = "1.0.3"
+	Version = "1.0.4"
 )
 
 /*
 Changelog:
+
+============================
+1.0.4 - Home pagination
+============================
+
+- Added: home page pagination controls rendered below latest posts.
+- Added: configurable home page page size (posts per page) exposed in Admin -> Settings.
+- Added: idempotent migration to seed the new setting for new installs.
 
 =========================
 1.0.3 - Styling cleanup

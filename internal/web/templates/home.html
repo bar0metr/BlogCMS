@@ -20,6 +20,27 @@
         {{end}}
       </div>
     {{end}}
+
+    {{if or .HasPrev .HasNext}}
+      <div class="card">
+        <div class="pager">
+          {{if .HasPrev}}
+            <a class="tag" href="/?page={{sub .Page 1}}">Prev</a>
+            <a class="tag" href="/?page=1">1</a>
+          {{else}}
+            <span class="tag tag-disabled">Prev</span>
+          {{end}}
+
+          <span class="tag tag-current">{{.Page}}</span>
+
+          {{if .HasNext}}
+            <a class="tag" href="/?page={{add .Page 1}}">Next</a>
+          {{else}}
+            <span class="tag tag-disabled">Next</span>
+          {{end}}
+        </div>
+      </div>
+    {{end}}
   {{else}}
     <div class="card muted">No posts yet.</div>
   {{end}}

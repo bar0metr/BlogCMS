@@ -58,6 +58,23 @@ aside {
   font-size: 12px;
 }
 
+.tag-current {
+  background: #111827;
+  border-color: #374151;
+}
+
+.tag-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 textarea, input {
   width: 100%;
   background: #0b0f14;

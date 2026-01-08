@@ -42,6 +42,7 @@ type Server struct {
 	cacheTitle  ttlCache[string]
 	cacheAbout  ttlCache[string]
 	cacheFooter ttlCache[string]
+	cacheHomePostsPerPage ttlCache[int]
 	cacheTags   ttlCache[[]domain.Tag]
 }
 
@@ -241,6 +242,7 @@ func (s *Server) commonViewData(ctx context.Context) (ViewCommon, error) {
 		title  string
 		about  string
 		footer string
+		homePostsPerPage int
 		cloud  []domain.Tag
 	)
 
@@ -262,7 +264,7 @@ func (s *Server) commonViewData(ctx context.Context) (ViewCommon, error) {
 		})
 	}
 
-	wg.Add(4)
+	wg.Add(5)
 	go func() {
 		defer wg.Done()
 		v, err := s.cacheTitle.GetOrLoad(ctx, s.settingsTTL, func(c context.Context) (string, error) {
@@ -276,6 +278,17 @@ func (s *Server) commonViewData(ctx context.Context) (ViewCommon, error) {
 		if title == "" {
 			title = s.defaultBlogTitle
 		}
+	}()
+	go func() {
+		defer wg.Done()
+		n, err := s.cacheHomePostsPerPage.GetOrLoad(ctx, s.settingsTTL, func(c context.Context) (int, error) {
+			return s.services.Settings.HomePostsPerPage(c, app.DefaultHomePostsPerPage)
+		})
+		if err != nil {
+			setErr(err)
+			return
+		}
+		homePostsPerPage = n
 	}()
 	go func() {
 		defer wg.Done()
@@ -327,6 +340,7 @@ func (s *Server) commonViewData(ctx context.Context) (ViewCommon, error) {
 		BlogTitle:  title,
 		BlogAbout:  about,
 		BlogFooter: footer,
+		HomePostsPerPage: homePostsPerPage,
 		TagCloud:   cloud,
 	}
 
@@ -344,6 +358,7 @@ type ViewCommon struct {
 	BlogTitle   string
 	BlogAbout   string
 	BlogFooter  string
+	HomePostsPerPage int
 	TagCloud    []domain.Tag
 	CSRFToken   string
 	IsAuthed    bool

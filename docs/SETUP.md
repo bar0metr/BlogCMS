@@ -36,6 +36,7 @@ Apply schema + initial settings:
 ```bash
 psql "$BLOGCMS_DSN" -f migrations/001_init.sql
 psql "$BLOGCMS_DSN" -f migrations/002_seed_settings.sql
+psql "$BLOGCMS_DSN" -f migrations/003_seed_home_posts_per_page.sql
 ```
 
 Notes:
@@ -190,6 +191,7 @@ Run from an admin workstation or on the host (does not require root):
 export BLOGCMS_DSN="postgres://blogcms:CHANGE_ME@localhost:5432/blogcms?sslmode=disable"
 psql "$BLOGCMS_DSN" -f /opt/blogcms/migrations/001_init.sql
 psql "$BLOGCMS_DSN" -f /opt/blogcms/migrations/002_seed_settings.sql
+psql "$BLOGCMS_DSN" -f /opt/blogcms/migrations/003_seed_home_posts_per_page.sql
 ```
 
 ### 6.4) Create the admin user (once)
