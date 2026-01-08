@@ -150,6 +150,14 @@ func (s *PostService) TagCloud(ctx context.Context) ([]domain.Tag, error) {
 	return tags, nil
 }
 
+func (s *PostService) SuggestTags(ctx context.Context, query string, limit int) ([]domain.Tag, error) {
+	tags, err := s.tags.Suggest(ctx, query, limit)
+	if err != nil {
+		return nil, fmt.Errorf("tag suggest: %w", err)
+	}
+	return tags, nil
+}
+
 func splitTags(csv string) []string {
 	if strings.TrimSpace(csv) == "" {
 		return nil

@@ -252,6 +252,25 @@ func (s *Server) handleAdminUpdatePost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/posts/edit/"+p.Slug, http.StatusFound)
 }
 
+func (s *Server) handleAdminTagSuggest(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	q := r.URL.Query().Get("q")
+	tags, err := s.services.Posts.SuggestTags(r.Context(), q, 10)
+	if err != nil {
+		writeDomainError(w, err)
+		return
+	}
+	out := make([]string, 0, len(tags))
+	for _, t := range tags {
+		out = append(out, t.Name)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(out)
+}
+
 func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 	common, err := s.commonViewData(r.Context())
 	if err != nil {

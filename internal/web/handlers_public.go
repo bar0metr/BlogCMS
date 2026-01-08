@@ -25,12 +25,21 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	type homePost struct {
+		domain.Post
+		Excerpt string
+	}
+	viewPosts := make([]homePost, 0, len(posts))
+	for _, p := range posts {
+		viewPosts = append(viewPosts, homePost{Post: p, Excerpt: excerptFromHTML(p.ContentHTML)})
+	}
+
 	data := struct {
 		ViewCommon
-		Posts []domain.Post
+		Posts []homePost
 	}{
 		ViewCommon: common,
-		Posts:      posts,
+		Posts:      viewPosts,
 	}
 
 	if err := s.renderer.Render(w, "home.html", data); err != nil {

@@ -31,6 +31,22 @@
     article pre { overflow: auto; }
     article table { display: block; max-width: 100%; overflow: auto; }
 
+    /* Tags editor (admin) */
+    .tags-editor { display:flex; flex-wrap:wrap; gap:8px; align-items:center; min-height: 44px; padding: 8px; background: #0b0f14; border: 1px solid #1f2937; border-radius: 10px; }
+    .tags-input { flex: 1; min-width: 140px; border: none; outline: none; padding: 6px 8px; background: transparent; color:#e6edf3; }
+    .tags-input:focus { outline:none; }
+    .tag-chip { display:inline-flex; align-items:center; gap:8px; padding: 6px 10px; border: 1px solid #1f2937; border-radius: 999px; background:#0f1620; font-size: 12px; }
+    .tag-chip-x { border:none; background: transparent; color:#9aa4b2; padding: 0; line-height: 1; cursor:pointer; }
+    .tag-chip-x:hover { color:#e6edf3; }
+    .tags-suggest { position: relative; }
+    #tags_suggest { position: absolute; z-index: 50; width: calc(100% - 2px); margin-top: 6px; background:#0f1620; border:1px solid #1f2937; border-radius: 10px; overflow:hidden; }
+    .tags-suggest-item { padding: 10px 12px; cursor:pointer; }
+    .tags-suggest-item:hover { background:#111827; }
+
+    /* Home preview */
+    .post-excerpt { margin-top: 10px; font-size: 13px; line-height: 1.5; max-height: 3.6em; overflow: hidden; position: relative; }
+    .post-excerpt:after { content: ""; position:absolute; left:0; right:0; bottom:0; height: 1.8em; background: linear-gradient(to bottom, rgba(15,22,32,0), rgba(15,22,32,1)); }
+
     /* EasyMDE / CodeMirror dark theme tweaks */
     .editor-toolbar { background:#0f1620; border:1px solid #1f2937; border-radius: 10px; }
     .editor-toolbar a { color:#9aa4b2 !important; }

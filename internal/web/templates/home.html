@@ -10,6 +10,7 @@
           <div><a href="/post/{{.Slug}}"><strong>{{.Title}}</strong></a></div>
           {{if .PublishedAt}}<div class="muted" style="font-size:12px;">{{.PublishedAt.Format "2006-01-02"}}</div>{{end}}
         </div>
+        {{if .Excerpt}}<div class="post-excerpt muted">{{.Excerpt}}</div>{{end}}
         {{if .Tags}}
           <div style="margin-top:10px;">
             {{range .Tags}}

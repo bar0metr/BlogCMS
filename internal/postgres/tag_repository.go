@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"blogcms/internal/domain"
 )
@@ -35,6 +36,41 @@ ORDER BY used DESC, t.name ASC;`
 	for rows.Next() {
 		var t domain.Tag
 		if err := rows.Scan(&t.ID, &t.Name, &t.Slug, &t.Used); err != nil {
+			return nil, err
+		}
+		out = append(out, t)
+	}
+	return out, rows.Err()
+}
+
+func (r *TagRepository) Suggest(ctx context.Context, query string, limit int) ([]domain.Tag, error) {
+	q := strings.TrimSpace(query)
+	if q == "" {
+		return nil, nil
+	}
+	if limit <= 0 || limit > 50 {
+		limit = 10
+	}
+
+	// Prefix match on tag name (case-insensitive). We do NOT filter by
+	// published usage; admin wants suggestions from the full tag set.
+	const sqlq = `
+SELECT id, name, slug
+FROM tags
+WHERE name ILIKE $1
+ORDER BY name ASC
+LIMIT $2;`
+
+	rows, err := r.db.QueryContext(ctx, sqlq, q+"%", limit)
+	if err != nil {
+		return nil, fmt.Errorf("query tag suggestions: %w", err)
+	}
+	defer rows.Close()
+
+	var out []domain.Tag
+	for rows.Next() {
+		var t domain.Tag
+		if err := rows.Scan(&t.ID, &t.Name, &t.Slug); err != nil {
 			return nil, err
 		}
 		out = append(out, t)

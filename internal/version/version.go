@@ -1,11 +1,25 @@
 package version
 
 var (
-	Version = "1.0.1"
+	Version = "1.0.2"
 )
 
 /*
 Changelog:
+
+=========================
+1.0.2 - Tags, slugs, and UX fixes
+=========================
+
+- Fixed: corrected slug generation logic to preserve historical behavior for empty and non-alphanumeric-only inputs, restoring test invariants while remaining Unicode-safe.
+- Fixed: eliminated tag corruption caused by slug collisions when using non-ASCII tag names; tags are no longer implicitly merged under a shared fallback slug.
+- Fixed: aligned all test doubles and fakes with updated domain interfaces after introducing tag suggestion capabilities.
+- Added: tag suggestion endpoint for admin UI, enabling prefix-based lookup of existing tags to reduce duplication and typos.
+- Added: interactive tag editor in admin post form with YouTube-style “chip” UI, supporting autocomplete, deduplication, and keyboard-friendly editing.
+- Added: automatic post preview (excerpt) generation for the home page by stripping markup and extracting a concise text summary.
+- Improved: home page UX by displaying post previews under titles with a subtle visual fade, improving scanability without full-content rendering.
+- Refactor: isolated excerpt generation into a reusable helper to keep handlers and templates simpler.
+- Tests: ensured full test suite compatibility after slug and tag logic changes; no regressions in existing coverage.
 
 =========================
 1.0.1 - Stability hotfixes

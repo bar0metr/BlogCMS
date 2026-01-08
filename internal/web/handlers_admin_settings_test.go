@@ -29,6 +29,10 @@ type fakeTagRepo struct{}
 
 func (fakeTagRepo) Cloud(context.Context) ([]domain.Tag, error) { return nil, domain.ErrNotFound }
 
+func (fakeTagRepo) Suggest(context.Context, string, int) ([]domain.Tag, error) {
+	return nil, domain.ErrNotFound
+}
+
 type fakeUserRepo struct{}
 
 func (fakeUserRepo) ByUsername(context.Context, string) (domain.User, error) {

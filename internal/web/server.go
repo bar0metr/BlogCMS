@@ -172,6 +172,7 @@ func (s *Server) registerRoutes(mux *http.ServeMux) {
 	mux.Handle("/admin/posts/create", requireAuth(requireCSRF(http.HandlerFunc(s.handleAdminCreatePost))))
 	mux.Handle("/admin/posts/edit/", requireAuth(http.HandlerFunc(s.handleAdminEditPost)))
 	mux.Handle("/admin/posts/update", requireAuth(requireCSRF(http.HandlerFunc(s.handleAdminUpdatePost))))
+	mux.Handle("/admin/tags/suggest", requireAuth(http.HandlerFunc(s.handleAdminTagSuggest)))
 	mux.Handle("/admin/settings", requireAuth(requireCSRF(http.HandlerFunc(s.handleAdminSettings))))
 	mux.Handle("/admin/upload", requireAuth(requireCSRF(http.HandlerFunc(s.handleAdminUpload))))
 }

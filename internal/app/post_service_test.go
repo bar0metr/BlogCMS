@@ -40,6 +40,7 @@ func (m *postRepoMock) SetPostTags(_ context.Context, _ int64, tagNames []string
 type tagRepoMock struct{}
 
 func (tagRepoMock) Cloud(_ context.Context) ([]domain.Tag, error) { return nil, nil }
+func (tagRepoMock) Suggest(_ context.Context, _ string, _ int) ([]domain.Tag, error) { return nil, nil }
 
 // Used by concurrency tests; avoids shared mutable state.
 type postRepoNoop struct{ next atomic.Int64 }

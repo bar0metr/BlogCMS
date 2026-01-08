@@ -25,9 +25,12 @@
       <label class="muted">Title</label>
       <input name="title" value="{{.Post.Title}}" required/>
 
-      <div style="margin-top:12px;">
-        <label class="muted">Tags (comma-separated)</label>
-        <input name="tags" value="{{.Tags}}"/>
+      <div style="margin-top:12px; position:relative;">
+        <label class="muted">Tags</label>
+        <input type="hidden" id="tags_csv" name="tags" value="{{.Tags}}"/>
+        <div id="tags_editor" class="tags-editor" aria-label="Tags"></div>
+        <div id="tags_suggest" class="tags-suggest" style="display:none;"></div>
+        <div class="muted" style="margin-top:6px; font-size:12px;">Type a tag and press comma/Enter. Suggestions appear as you type.</div>
       </div>
 
       <div style="margin-top:12px;">
@@ -63,6 +66,155 @@
   <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
   <script>
     (function(){
+      // --- Tag editor (YouTube-like chips) ---
+      (function(){
+        var hidden = document.getElementById('tags_csv');
+        var host = document.getElementById('tags_editor');
+        var suggest = document.getElementById('tags_suggest');
+        if (!hidden || !host) return;
+
+        function norm(s){ return (s||'').trim(); }
+        function parseCSV(csv){
+          if (!csv) return [];
+          var parts = csv.split(',');
+          var out = [];
+          var seen = {};
+          for (var i=0;i<parts.length;i++){
+            var t = norm(parts[i]);
+            if (!t) continue;
+            var key = t.toLowerCase();
+            if (seen[key]) continue;
+            seen[key]=true;
+            out.push(t);
+          }
+          return out;
+        }
+        function toCSV(tags){ return tags.join(', '); }
+
+        var tags = parseCSV(hidden.value);
+
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'tags-input';
+        input.autocomplete = 'off';
+        input.placeholder = tags.length ? '' : 'Add tags...';
+
+        function render(){
+          host.innerHTML = '';
+          for (var i=0;i<tags.length;i++){
+            (function(name){
+              var chip = document.createElement('span');
+              chip.className = 'tag-chip';
+              var text = document.createElement('span');
+              text.textContent = name;
+              var x = document.createElement('button');
+              x.type = 'button';
+              x.className = 'tag-chip-x';
+              x.textContent = '×';
+              x.onclick = function(){
+                tags = tags.filter(function(t){ return t.toLowerCase() !== name.toLowerCase(); });
+                sync();
+                input.focus();
+              };
+              chip.appendChild(text);
+              chip.appendChild(x);
+              host.appendChild(chip);
+            })(tags[i]);
+          }
+          host.appendChild(input);
+          input.placeholder = tags.length ? '' : 'Add tags...';
+        }
+
+        function sync(){
+          hidden.value = toCSV(tags);
+          render();
+          hideSuggest();
+        }
+
+        function addTag(name){
+          var t = norm(name);
+          if (!t) return;
+          var key = t.toLowerCase();
+          for (var i=0;i<tags.length;i++){
+            if (tags[i].toLowerCase() === key) return;
+          }
+          tags.push(t);
+          input.value = '';
+          sync();
+        }
+
+        function removeLast(){
+          if (!tags.length) return;
+          tags.pop();
+          sync();
+        }
+
+        function showSuggest(items){
+          if (!suggest) return;
+          suggest.innerHTML = '';
+          if (!items || !items.length){ hideSuggest(); return; }
+          for (var i=0;i<items.length;i++){
+            (function(name){
+              var el = document.createElement('div');
+              el.className = 'tags-suggest-item';
+              el.textContent = name;
+              el.onmousedown = function(e){
+                e.preventDefault();
+                addTag(name);
+              };
+              suggest.appendChild(el);
+            })(items[i]);
+          }
+          suggest.style.display = 'block';
+        }
+        function hideSuggest(){ if (suggest) suggest.style.display = 'none'; }
+
+        var suggestTimer = null;
+        function requestSuggest(q){
+          q = norm(q);
+          if (q.length < 1){ hideSuggest(); return; }
+          if (suggestTimer) clearTimeout(suggestTimer);
+          suggestTimer = setTimeout(function(){
+            fetch('/admin/tags/suggest?q=' + encodeURIComponent(q), {credentials:'same-origin'})
+              .then(function(r){ return r.ok ? r.json() : []; })
+              .then(function(items){
+                // Filter out already-selected tags client-side.
+                var filtered = [];
+                var selected = {};
+                for (var i=0;i<tags.length;i++) selected[tags[i].toLowerCase()] = true;
+                for (var j=0;j<items.length && filtered.length<10;j++){
+                  var nm = items[j];
+                  if (!selected[(nm||'').toLowerCase()]) filtered.push(nm);
+                }
+                showSuggest(filtered);
+              })
+              .catch(function(){ hideSuggest(); });
+          }, 120);
+        }
+
+        host.onclick = function(){ input.focus(); };
+        input.addEventListener('keydown', function(e){
+          if (e.key === ',' || e.key === 'Enter'){
+            e.preventDefault();
+            addTag(input.value);
+            return;
+          }
+          if (e.key === 'Backspace' && input.value === ''){
+            removeLast();
+            return;
+          }
+          if (e.key === 'Escape'){
+            hideSuggest();
+            return;
+          }
+        });
+        input.addEventListener('input', function(){ requestSuggest(input.value); });
+        input.addEventListener('blur', function(){ setTimeout(hideSuggest, 150); });
+
+        // Initialize
+        render();
+      })();
+
       var ta = document.getElementById('content_md');
       if (!ta || typeof EasyMDE === 'undefined') return;
 

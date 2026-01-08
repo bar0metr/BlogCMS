@@ -16,6 +16,7 @@ type PostRepository interface {
 
 type TagRepository interface {
 	Cloud(ctx context.Context) ([]Tag, error)
+	Suggest(ctx context.Context, query string, limit int) ([]Tag, error)
 }
 
 type UserRepository interface {
