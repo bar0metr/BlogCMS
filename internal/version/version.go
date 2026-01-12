@@ -1,12 +1,23 @@
 package version
 
 var (
-	Version = "1.0.5"
+	Version = "1.0.6"
 )
 
 /*
 Changelog:
 
+=========================
+1.0.6 - Backup/Restore I/O
+=========================
+
+- Added: new `cmsio` CLI utility for full project backup/restore (posts + tags + relations, plus uploads) using the existing engine config (DB credentials + uploads dir).
+- Added: portable `tar.gz` backup format with versioned `manifest.json`, DB bundle export, and uploads tree; includes checksums metadata for uploads.
+- Added: import workflow that can bootstrap a clean system from an archive, with safety flags (truncate/no-truncate, overwrite/no-overwrite uploads, include/exclude settings).
+- Added: best-effort “referenced-only uploads” export mode to package only files actually linked from article content.
+- Docs: documented export/import usage and archive format in `docs/IMPORT_EXPORT.md`; README updated with Backup/Restore section.
+- Tests: added integration tests for export→import roundtrip (gated by `BLOGCMS_TEST_DSN`).
+- Build: adjusted `go.mod` Go version declaration to avoid toolchain auto-download in offline/CI environments.
 
 ============================
 1.0.5 - Mobile layout fixes

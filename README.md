@@ -88,6 +88,13 @@ Utility to create/update admin user:
 go build -o ./bin/addadmin ./cmd/addadmin
 ```
 
+
+## Backup / Restore (import/export)
+
+BlogCMS ships with a CLI utility that exports posts (with tags and optional settings) together with uploaded files, and imports the archive on a clean installation.
+
+See `docs/IMPORT_EXPORT.md` for usage and flags.
+
 ## Testing
 
 Run all unit tests:
